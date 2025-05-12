@@ -57,11 +57,11 @@ app.use(
   })
 );
 
-app.use("/api", routes);
-app.use("/api", AuthRouter);
-app.use("/api", Adminlogin);
-app.use("/api", Dashboard);
-app.use("/banner", express.static(path.join(__dirname, "/public/upload")));
+app.use("/new/api", routes);
+app.use("/new/api", AuthRouter);
+app.use("/new/api", Adminlogin);
+app.use("/new/api", Dashboard);
+app.use("/new/banner", express.static(path.join(__dirname, "/public/upload")));
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(process.env.RPC_URL, {
