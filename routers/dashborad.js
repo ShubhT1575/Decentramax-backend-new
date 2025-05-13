@@ -953,15 +953,18 @@ router.get("/downline",async (req,res)=>{
   }
 })
 router.get("/hyperLoopLevelIncome",async (req,res)=>{
-  const {address} = req.query;
+  const {address, level} = req.query;
   try {
-    const data = await LevelIncome.find({receiver: address}).sort({createdAt: -1});
+    const data = await LevelIncome.find({receiver: address, level: level}).sort({createdAt: -1});
     if(!data){
       return res.status(404).json({msg: "Data not found", success: false});
     }
-    res.status(200).json({msg: "Data fetch successful", success: true, data});
+    const amountData = await LevelIncome.find({receiver: address});
+    let amount = amountData.reduce((acc, record) => acc + record.reward, 0)/1e18;
+    // console.log(amount, "amount")
+    res.status(200).json({msg: "Data fetch successful", success: true, data, amount});
   } catch (error) {
-    console.log(error);
+    console.log(error)
     res.status(500).json({msg: "Error in data fetching", success: false, error: error.message});
   }
 })
