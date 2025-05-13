@@ -928,7 +928,7 @@ router.get("/hyperloop", async (req, res) => {
 router.get("/upline",async (req,res)=>{
   const {address} = req.query;
   try {
-    const data = await GlobalUplineIncome.find({receiver: address}).sort({createdAt: -1});
+    const data = await GlobalUplineIncome.find({sender: address}).sort({createdAt: -1});
     if(!data){
       return res.status(404).json({msg: "Data not found", success: false});
     }
@@ -942,7 +942,7 @@ router.get("/upline",async (req,res)=>{
 router.get("/downline",async (req,res)=>{
   const {address} = req.query;
   try {
-    const data = await GlobalDownlineIncome.find({receiver: address}).sort({createdAt: -1});
+    const data = await GlobalDownlineIncome.find({sender: address}).sort({createdAt: -1});
     if(!data){
       return res.status(404).json({msg: "Data not found", success: false});
     }
