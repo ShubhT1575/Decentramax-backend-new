@@ -983,6 +983,34 @@ router.get("/downline", async (req, res) => {
   }
 });
 
+router.get("/totalUpline", async (req, res) => {
+  const {address} = req.query;
+  try {
+    const data = await GlobalUplineIncome.find({sender: address});
+    if(!data){
+      return res.status(404).json({msg: "Data not found", success: false});
+    }
+    res.status(200).json({msg: "Data fetch successful", success: true, data});
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({msg: "Error in data fetching", success: false, error: error.message});
+  }
+})
+
+router.get("/totalDownline", async (req, res) => {
+  const {address} = req.query;
+  try {
+    const data = await GlobalDownlineIncome.find({sender: address});
+    if(!data){
+      return res.status(404).json({msg: "Data not found", success: false});
+    }
+    res.status(200).json({msg: "Data fetch successful", success: true, data});
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({msg: "Error in data fetching", success: false, error: error.message});
+  }
+})
+
 
 router.get("/hyperLoopLevelIncome",async (req,res)=>{
   const {address, level} = req.query;
