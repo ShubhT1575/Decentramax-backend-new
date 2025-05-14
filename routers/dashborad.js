@@ -926,32 +926,64 @@ router.get("/hyperloop", async (req, res) => {
 
 
 router.get("/upline",async (req,res)=>{
-  const {address} = req.query;
-  try {
-    const data = await GlobalUplineIncome.find({sender: address}).sort({createdAt: -1});
-    if(!data){
-      return res.status(404).json({msg: "Data not found", success: false});
-    }
-    res.status(200).json({msg: "Data fetch successful", success: true, data});
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({msg: "Error in data fetching", success: false, error: error.message});
-  }
-})
+  const { address } = req.query;
 
-router.get("/downline",async (req,res)=>{
-  const {address} = req.query;
   try {
-    const data = await GlobalDownlineIncome.find({sender: address}).sort({createdAt: -1});
-    if(!data){
-      return res.status(404).json({msg: "Data not found", success: false});
+    // Step 1: Get the latest level 1 document
+    const latestLevel1 = await GlobalUplineIncome.findOne({ sender: address, level: 1 })
+      .sort({ createdAt: -1 });
+
+    if (!latestLevel1) {
+      return res.status(404).json({ msg: "No level 1 data found", success: false });
     }
-    res.status(200).json({msg: "Data fetch successful", success: true, data});
+
+    // Step 2: Get all documents with createdAt >= latest level 1's createdAt
+    const data = await GlobalUplineIncome.find({
+      sender: address,
+      createdAt: { $gte: latestLevel1.createdAt }
+    }).sort({ createdAt: -1 });
+
+    if (!data || data.length === 0) {
+      return res.status(404).json({ msg: "Data not found", success: false });
+    }
+
+    res.status(200).json({ msg: "Data fetch successful", success: true, data : data.reverse() });
   } catch (error) {
     console.log(error);
-    res.status(500).json({msg: "Error in data fetching", success: false, error: error.message});
+    res.status(500).json({ msg: "Error in data fetching", success: false, error: error.message });
   }
-})
+});
+
+router.get("/downline", async (req, res) => {
+  const { address } = req.query;
+
+  try {
+    // Step 1: Get the latest level 1 document
+    const latestLevel1 = await GlobalDownlineIncome.findOne({ sender: address, level: 1 })
+      .sort({ createdAt: -1 });
+
+    if (!latestLevel1) {
+      return res.status(404).json({ msg: "No level 1 data found", success: false });
+    }
+
+    // Step 2: Get all documents with createdAt >= latest level 1's createdAt
+    const data = await GlobalDownlineIncome.find({
+      sender: address,
+      createdAt: { $gte: latestLevel1.createdAt }
+    }).sort({ createdAt: -1 });
+
+    if (!data || data.length === 0) {
+      return res.status(404).json({ msg: "Data not found", success: false });
+    }
+
+    res.status(200).json({ msg: "Data fetch successful", success: true, data : data.reverse() });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Error in data fetching", success: false, error: error.message });
+  }
+});
+
+
 router.get("/hyperLoopLevelIncome",async (req,res)=>{
   const {address, level} = req.query;
   try {
