@@ -1113,7 +1113,7 @@ router.get("/getAllUserAutoPool", async (req, res) => {
     if(!users){
       return res.status(404).json({msg: "Data not found", success: false});
     }
-    res.status(200).json({msg: "Data fetch successful", success: true, users, length: users.length});
+    res.status(200).json(users);
   } catch (error) {
     console.log(error)
     res.status(500).json({msg: "Error in data fetching", success: false, error: error.message});
@@ -1128,7 +1128,7 @@ router.get("/getAllUserHyperLoop", async (req, res) => {
     if(!users){
       return res.status(404).json({msg: "Data not found", success: false});
     }
-    res.status(200).json({msg: "Data fetch successful", success: true, users, length: users.length});
+    res.status(200).json(users);
   } catch (error) {
     console.log(error)
     res.status(500).json({msg: "Error in data fetching", success: false, error: error.message});
