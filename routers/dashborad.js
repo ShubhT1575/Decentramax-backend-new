@@ -1104,4 +1104,34 @@ router.get("/withdrawAutoPool", async (req,res)=>{
   }
 })
 
+
+// admin of hyperloop and autopool
+
+router.get("/getAllUserAutoPool", async (req, res) => {
+  try {
+    const users = await JoinAutoPool.find().sort({createdAt: -1})
+    if(!users){
+      return res.status(404).json({msg: "Data not found", success: false});
+    }
+    res.status(200).json({msg: "Data fetch successful", success: true, users});
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({msg: "Error in data fetching", success: false, error: error.message});
+  }
+})
+
+router.get("/getAllUserHyperLoop", async (req, res) => {
+  try {
+    const users = await registration.find().sort({createdAt: -1})
+    if(!users){
+      return res.status(404).json({msg: "Data not found", success: false});
+    }
+    res.status(200).json({msg: "Data fetch successful", success: true, users});
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({msg: "Error in data fetching", success: false, error: error.message});
+  }
+})
+
+
 module.exports = router;
