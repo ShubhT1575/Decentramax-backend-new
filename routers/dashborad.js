@@ -1060,6 +1060,23 @@ router.get("/joinedAutopool",async (req,res)=>{
   }
 })
 
+router.get("/getAddressbyRefrralIddAutpool", async (req, res) => {
+  try {
+    const { userId } = req.query;
+
+    if (!userId) {
+      return res.status(400).json({ error: "userId is required" });
+    }
+
+    const record = await registrationGlobal.findOne({ uId: userId });
+
+    res.status(200).json(record.user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 router.get("/newUserPlaceAutoPool", async (req,res)=>{
   const {address, level} = req.query;
   try {
